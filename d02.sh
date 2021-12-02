@@ -9,24 +9,21 @@ data="./d02.txt"
 
 depth=0
 pos=0
-while read -r line
-do
-    cmd=($line)
-    # echo "cmd: ${cmd[0]}, amt: ${cmd[1]}"
-    if [[ "forward" = "${cmd[0]}" ]]; then
-        pos=$(($pos + ${cmd[1]}))
-    elif [[ "down" = "${cmd[0]}" ]]; then
-        depth=$(($depth + ${cmd[1]}))
-    elif [[ "up" = "${cmd[0]}" ]]; then
-        depth=$(($depth - ${cmd[1]}))
+while IFS=" " read -r cmd amt; do
+    # echo "cmd: $cmd, amt: $amt"
+    if [[ "forward" = "$cmd" ]]; then
+        pos=$(($pos + $amt))
+    elif [[ "down" = "$cmd" ]]; then
+        depth=$(($depth + $amt))
+    elif [[ "up" = "$cmd" ]]; then
+        depth=$(($depth - $amt))
     else
-        echo "bad command ${cmd[0]}"
+        echo "bad command $cmd"
     fi
-
 done < "$data"
 
 p1=$(($pos * $depth))
-echo "Part 1 pos: $pos; depth $depth; answer: $p1"
+echo "Part 1: pos $pos; depth $depth; answer: $p1"
 
 
 # Part 2
@@ -34,23 +31,18 @@ echo "Part 1 pos: $pos; depth $depth; answer: $p1"
 depth=0
 pos=0
 aim=0
-while read -r line
-do
-    cmd=($line)
-    if [[ "forward" = "${cmd[0]}" ]]; then
-        pos=$(($pos + ${cmd[1]}))
-        depth=$(($depth + ($aim * ${cmd[1]})))
-    elif [[ "down" = "${cmd[0]}" ]]; then
-        aim=$(($aim + ${cmd[1]}))
-    elif [[ "up" = "${cmd[0]}" ]]; then
-        aim=$(($aim - ${cmd[1]}))
+while IFS=" " read -r cmd amt; do
+    if [[ "forward" = "$cmd" ]]; then
+        pos=$(($pos + $amt))
+        depth=$(($depth + ($aim * $amt)))
+    elif [[ "down" = "$cmd" ]]; then
+        aim=$(($aim + $amt))
+    elif [[ "up" = "$cmd" ]]; then
+        aim=$(($aim - $amt))
     else
-        echo "bad command ${cmd[0]}"
+        echo "bad command $cmd"
     fi
-    # echo "cmd: ${cmd[0]}, amt: ${cmd[1]} ... new pos $pos, depth $depth, aim $aim"
-
 done < "$data"
 
 p1=$(($pos * $depth))
-echo "Part 1 pos $pos; depth $depth; aim $aim; answer: $p1"
-
+echo "Part 2: pos $pos; depth $depth; aim $aim; answer: $p1"
